@@ -50,13 +50,39 @@ export const createTeacher = async (req, res) => {
  */
 export const getAllTeachers = async (req, res) => {
     try {
-        const teachers = await db.Teacher.findAll({ include: db.Course });
-        res.json(teachers);
+        // Pagination
+        const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const offset = (page - 1) * limit;
+
+        // Sorting
+        const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
+
+        // Eager loading
+        const include = [];
+        if (req.query.populate) {
+            const relations = req.query.populate.split(',');
+            relations.forEach(rel => {
+                if (rel === 'courseId') include.push({ model: db.Course });
+            });
+        }
+        const result = await db.Teacher.findAndCountAll({
+            limit,
+            offset,
+            order: [['createdAt', sortOrder]],
+            include
+        });
+
+        res.status(200).json({
+            total: result.count,
+            page,
+            pages: Math.ceil(result.count / limit),
+            data: result.rows
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
-
 /**
  * @swagger
  * /teachers/{id}:

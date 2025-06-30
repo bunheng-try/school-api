@@ -7,6 +7,29 @@ import db from '../models/index.js';
  *   description: Student management
  */
 
+/**
+ * @swagger
+ * /students:
+ *    post:
+ *     summary: Create a new student
+ *     tags: [Students]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, department]
+ *             properties:
+ *               name:
+ *                 type: string
+ *               department:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Students created
+ */
+
 export const createStudent = async (req, res) => {
     try {
         const student = await db.Student.create(req.body);
@@ -28,13 +51,40 @@ export const createStudent = async (req, res) => {
  */
 export const getAllStudents = async (req, res) => {
     try {
-        const students = await db.Student.findAll({ include: db.Course });
-        res.json(students);
+        // Pagination
+        const limit = parseInt(req.query.limit) || 6;
+        const page = parseInt(req.query.page) || 1;
+        const offset = (page - 1) * limit;
+        // Sorting
+        const sortOrder = req.query.sort === 'desc' ? 'DESC' : 'ASC';
+        // Eager loading
+        const include = [];
+        if (req.query.populate) {
+            const relations = req.query.populate.split(',');
+            relations.forEach(rel => {
+                if (rel === 'courseId') include.push({ model: db.Course });
+            });
+        }
+        // Fetch with Sequelize
+        const result = await db.Student.findAndCountAll({
+            limit,
+            offset,
+            order: [['createdAt', sortOrder]],
+            include
+        });
+
+        // Response
+        res.status(200).json({
+            total: result.count,
+            page,
+            pages: Math.ceil(result.count / limit),
+            data: result.rows
+        });
+
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
-
 /**
  * @swagger
  * /students/{id}:
