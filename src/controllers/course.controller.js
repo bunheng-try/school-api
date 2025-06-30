@@ -39,7 +39,6 @@ export const createCourse = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
 /**
  * @swagger
  * /courses:
@@ -49,16 +48,78 @@ export const createCourse = async (req, res) => {
  *     parameters:
  *       - in: query
  *         name: page
- *         schema: { type: integer, default: 1 }
+ *         schema: 
+ *           type: integer
+ *           default: 1
  *         description: Page number
  *       - in: query
  *         name: limit
- *         schema: { type: integer, default: 10 }
+ *         schema: 
+ *           type: integer
+ *           default: 10
  *         description: Number of items per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         description: Sort order by createdAt (ascending or descending)
+ *       - in: query
+ *         name: populate
+ *         schema:
+ *           type: string
+ *           example: courseId
+ *         description: Related models to include, comma-separated
  *     responses:
  *       200:
- *         description: List of courses
+ *         description: List of courses with optional populated relations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 total:
+ *                   type: integer
+ *                   example: 25
+ *                 page:
+ *                   type: integer
+ *                   example: 1
+ *                 pages:
+ *                   type: integer
+ *                   example: 3
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Course'
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Course:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 1
+ *         title:
+ *           type: string
+ *           example: Introduction to Programming
+ *         description:
+ *           type: string
+ *           example: Learn the basics of programming.
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-01T12:00:00Z
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: 2024-01-02T12:00:00Z
+ */
+
 export const getAllCourses = async (req, res) => {
 
     const limit = parseInt(req.query.limit) || 10;

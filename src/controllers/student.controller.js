@@ -43,17 +43,32 @@ export const createStudent = async (req, res) => {
  * @swagger
  * /students:
  *   get:
- *     summary: Get all students
+ *     summary: Get all students with pagination, sorting, and populate
  *     tags: [Students]
  *     parameters:
  *       - in: query
  *         name: page
- *         schema: { type: integer, default: 1 }
+ *         schema:
+ *           type: integer
+ *           default: 1
  *         description: Page number
  *       - in: query
  *         name: limit
- *         schema: { type: integer, default: 10 }
+ *         schema:
+ *           type: integer
+ *           default: 10
  *         description: Number of items per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *         description: Sort order by createdAt field
+ *       - in: query
+ *         name: populate
+ *         schema:
+ *           type: string
+ *         description: Related model(s) to include
  *     responses:
  *       200:
  *         description: List of students

@@ -42,21 +42,38 @@ export const createTeacher = async (req, res) => {
  * @swagger
  * /teachers:
  *   get:
- *     summary: Get all teachers
+ *     summary: Get all teachers with pagination, sorting, and populate
  *     tags: [Teachers]
  *     parameters:
  *       - in: query
  *         name: page
- *         schema: { type: integer, default: 1 }
+ *         schema:
+ *           type: integer
+ *           default: 1
  *         description: Page number
  *       - in: query
  *         name: limit
- *         schema: { type: integer, default: 10 }
+ *         schema:
+ *           type: integer
+ *           default: 10
  *         description: Number of items per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: asc
+ *         description: Sort order by createdAt field
+ *       - in: query
+ *         name: populate
+ *         schema:
+ *           type: string
+ *         description: Related model(s) to include 
  *     responses:
  *       200:
  *         description: List of teachers
  */
+
 export const getAllTeachers = async (req, res) => {
     try {
         // Pagination
