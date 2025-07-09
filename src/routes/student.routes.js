@@ -8,7 +8,9 @@ import {
 } from '../controllers/student.controller.js';
 
 const router = express.Router();
-
+router.post('/register route', (req, res)  => {
+    
+})
 router.post('/', createStudent);
 router.get('/', getAllStudents);
 router.get('/:id', getStudentById);

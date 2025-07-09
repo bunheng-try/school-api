@@ -1,0 +1,17 @@
+1. What are the main benefits of using JWT for authentication?
+JWTs make it easy to manage user authentication without storing sessions on the server. They work well across different services, are lightweight, and can carry useful information about the user.
+
+2. Where should you store your JWT secret and why?
+You should keep your JWT secret in environment variables. This keeps it hidden from your codebase and protects it from being accidentally shared or exposed.
+
+3. Why is it important to hash passwords even if the system is protected with JWT?
+JWT protects user sessions, but if someone gets access to your database, hashed passwords make it almost impossible for them to steal actual passwords. It’s an essential layer of security.
+
+4. What might happen if a protected route does not check the JWT?
+Anyone could access sensitive data or perform actions they shouldn’t, even without logging in. It basically leaves the door wide open.
+
+5. How does Swagger help frontend developers or API consumers?
+Swagger makes APIs easy to understand and test. It gives developers clear instructions and even lets them try things out right in the browser, saving time and confusion.
+
+6.What tradeoffs come with using token expiration (e.g., 1 hour)?
+Expiring tokens improve security by limiting how long a stolen token is useful, but they can also annoy users by making them log in again more often.
