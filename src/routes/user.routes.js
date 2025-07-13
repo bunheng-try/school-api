@@ -66,15 +66,16 @@
  *       401:
  *         description: Unauthorized
  */
-import { login , register } from '../controllers/auth.controllers.js';
-const express = require('express');
+import auth from '../middleware/auth.middleware.js';
+import authControllers from '../controllers/auth.controllers.js';
+import express from 'express';
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', authControllers.register);
+router.post('/login', authControllers.login);
 
 router.get('/users', auth, async (req, res) => {
-    const users = await require('../models').User.findall();
+    const users = await require('../models').User.findAll();
     res.json(users);
 });
 

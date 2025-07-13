@@ -1,11 +1,11 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const db = require('../models');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken'
+import db from '../models/index.js'
 const User = db.User;
 
 const SECRET = process.env.JWT_SECRET || 'school-api-secret';
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
     const { name, email, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
     }
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findone({ where: { email } });
@@ -31,3 +31,5 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 }
+
+export default { register, login };
